@@ -52,6 +52,7 @@ router.delete('/',authenticateToken, function(req, res, next){
 
 })
 
+//route to edit page
 router.get('/edit',authenticateToken, function(req, res, next){
 
 		console.log("req id "+req.query.id);
@@ -61,13 +62,47 @@ router.get('/edit',authenticateToken, function(req, res, next){
 	{
 		console.log("user dados.img"+dados[0].img);
 	  console.log(req.query);
-	  res.render('edit_options',{title: 'Edite a opção '+dados[0].name,users:dados,users2:JSON.stringify(dados),id:req.query.id});
+	  res.render('edit_options',{title: 'Edite a opção '+dados[0].name,users:dados,users2:JSON.stringify(dados[0]),id:req.query.id});
 	  },next)
 
 
 })
 
+//POST FOR EDITING
+router.post('/edit',authenticateToken, function(req, res, next)
+{
+ 	var formidable = require('formidable');
+  	var fs = require('fs');
 
+	var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+      console.log(files.filetoupload);
+      if(files.filetoupload.size == 0)
+      {
+        knex('options').where("id","=",fields.id).update({name:fields.name_of_place,img:fields.img2,votes:fields.votes})
+        .then( function (result) {res.send('/insert');});// respond back to request
+      }
+      else
+      {
+		var oldpath = files.filetoupload.path;
+		var newpath = 'images/' + files.filetoupload.name;
+        fs.rename(oldpath, 'public/'+newpath, function (err) 
+        {
+          if (err) throw err;
+          knex('options').insert({name:fields.name_of_place,img:newpath,votes:fields.votes})
+          .then( function (result) {res.send('/insert');});// respond back to request
+        });
+      }
+
+    });
+	
+	
+	   
+	
+});
+
+
+//POST FOR INSERTING NEW OPTION
 router.post('/',authenticateToken, function(req, res, next){
   var formidable = require('formidable');
   var fs = require('fs');
