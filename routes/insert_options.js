@@ -5,6 +5,8 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 router.use(cookieParser());
+var fs = require('fs');
+var formidable = require('formidable');
 
 router.use(bodyParser.json()); router.use(bodyParser.urlencoded({ extended: true }));
 const knex = require('knex')({
@@ -41,55 +43,49 @@ router.get('/',authenticateToken, function(req, res, next) {
 
 });
 
-router.delete('/',authenticateToken, function(req, res, next){
- 
-		knex('options')
-		.where('id',"=",req.query.id)
-		.del().then( function (result) {
-			  //res.redirect('/insert');
-        res.send("deleted by koringaum");
-		   });
 
-})
 
 //route to edit page
 router.get('/edit',authenticateToken, function(req, res, next){
 
-		console.log("req id "+req.query.id);
-		knex('options')
-		.where('id',req.query.id)
-		.then((dados)=>
-	{
-		console.log("user dados.img"+dados[0].img);
-	  console.log(req.query);
-	  res.render('edit_options',{title: 'Edite a opção '+dados[0].name,users:dados,users2:JSON.stringify(dados[0]),id:req.query.id});
-	  },next)
+	console.log("req id "+req.query.id);
+	knex('options')
+	.where('id',req.query.id)
+	.then((dados)=>
+{
+	console.log("user dados.img"+dados[0].img);
+  console.log(req.query);
+  res.render('edit_options',{title: 'Edite a opção '+dados[0].name,users:dados,users2:JSON.stringify(dados[0]),id:req.query.id});
+  },next)
 
 
 })
 
-//POST FOR EDITING
-router.post('/edit',authenticateToken, function(req, res, next)
+//PUT FOR EDITING OPTIONS
+router.put('/',authenticateToken, function(req, res, next)
 {
- 	var formidable = require('formidable');
-  	var fs = require('fs');
+
+
 
 	var form = new formidable.IncomingForm();
+	//parsing the form for all that juice data (and file)
     form.parse(req, function (err, fields, files) {
-      console.log(files.filetoupload);
+	  //if there is no image, update the text fields	
       if(files.filetoupload.size == 0)
       {
-        knex('options').where("id","=",fields.id).update({name:fields.name_of_place,img:fields.img2,votes:fields.votes})
+        knex('options').update({name:fields.name_of_place,img:fields.img,votes:fields.votes}).where("id",fields.id)
         .then( function (result) {res.send('/insert');});// respond back to request
       }
       else
       {
+		//get the tempfile path and create a new one in permanent storage
 		var oldpath = files.filetoupload.path;
 		var newpath = 'images/' + files.filetoupload.name;
         fs.rename(oldpath, 'public/'+newpath, function (err) 
         {
-          if (err) throw err;
-          knex('options').insert({name:fields.name_of_place,img:newpath,votes:fields.votes})
+		  if (err) throw err;
+		  //update the database
+          knex('options').update({name:fields.name_of_place,img:newpath,votes:fields.votes}).where("id",fields.id)
           .then( function (result) {res.send('/insert');});// respond back to request
         });
       }
@@ -104,19 +100,23 @@ router.post('/edit',authenticateToken, function(req, res, next)
 
 //POST FOR INSERTING NEW OPTION
 router.post('/',authenticateToken, function(req, res, next){
-  var formidable = require('formidable');
-  var fs = require('fs');
 
-  var form = new formidable.IncomingForm();
-    form.parse(req, function (err, fields, files) {
+	var form = new formidable.IncomingForm();
+	//parsing the form for all that juice data (and file)
+	form.parse(req, function (err, fields, files) 
+	{
+	  //get the tempfile path and create a new one in permanent storage
       var oldpath = files.filetoupload.path;
       var newpath = 'images/' + files.filetoupload.name;
 
-      fs.rename(oldpath, 'public/'+newpath, function (err) {
-      if (err) throw err;
-
+	  fs.rename(oldpath, 'public/'+newpath, function (err) 
+	  {
+      		if (err) throw err;
+			//update the database
 			knex('options').insert({name:fields.name_of_place,img:newpath,votes:0})
-			.then( function (result) {
+			.then( function (result) 
+			{
+			  console.log(result);
 			  res.redirect('/insert');     // respond back to request
 		   });
 
@@ -127,5 +127,18 @@ router.post('/',authenticateToken, function(req, res, next){
 
 
 });
+
+//DELETE for deleting options
+router.delete('/',authenticateToken, function(req, res, next){
+ 
+	knex('options')
+	.where('id',"=",req.query.id)
+	.del().then( function (result) {
+		  //res.redirect('/insert');
+	res.send("deleted by koringaum");
+	   });
+
+})
+
 
 module.exports = router;

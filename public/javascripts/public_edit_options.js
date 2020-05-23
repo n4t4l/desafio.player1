@@ -1,7 +1,7 @@
 var config = 
 {
-  method:'post',
-  url: "/insert/edit/",
+  method:'put',
+  url: "/insert/",
   headers: {'Content-type': 'application/json',"ta_enviando":"sim"},
   data:{}
 
@@ -9,15 +9,23 @@ var config =
 
 var EditOption = function()
 {
+  //here if we used the button as submit it would be sent automatically, but we need to add some info (id and old img src, in case of no file)
+  //so we manually create a formdata to send as body of requisition and then let formidable deal with it
   var bodyFormData = new FormData(document.forms[0]);
   bodyFormData.set('id', optionsInfo.id);
-  bodyFormData.set('img2', optionsInfo.img);
-  console.log("ayy");
-  console.log(config);
+  bodyFormData.set('img', optionsInfo.img);
+  //then we set the formdata as request body 
   config.data = bodyFormData;
-  axios(config).then(
-  function(response)
-  {console.log(response);});
+  axios(config).then
+  (//and we send it
+    function(response)
+    {
+      if(response.status == 200)
+      {
+        window.location = "/insert/edit/?id="+optionsInfo.id;//if ok, refresh
+      }
+    }
+  );
 }
 
 

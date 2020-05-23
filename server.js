@@ -14,10 +14,8 @@ const jwt = require('jsonwebtoken');
 
 //route linking
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var votesRouter = require('./routes/vote_options');
+var loginRouter = require('./routes/login');
 var insertRouter = require('./routes/insert_options');
-var editRouter = require('./routes/edit_options');
 
 
 //config express
@@ -42,7 +40,7 @@ const io = require('socket.io')(server);
 
 //ROUTING
 app.use('/', indexRouter);
-app.use('/login', usersRouter);
+app.use('/login', loginRouter);
 app.use('/insert', insertRouter);
 
 // catch 404 and forward to error handler

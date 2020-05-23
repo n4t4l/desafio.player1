@@ -17,8 +17,7 @@ router.get('/', function(req, res, next) {
     
     knex('options').then((dados)=>
   {
-    console.log(dados[0].name);
-	  //res.send(dados);
+   
     res.render('index',{title: 'Aplicação de votos Alex Natalino',users:dados,
     users2:JSON.stringify(dados)});
 	  },next)
