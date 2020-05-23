@@ -1,0 +1,19 @@
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "name":"Natalino",
+    "password":"123"
+}
+
+###
+
+POST http://localhost:8080/users/register
+Content-Type: application/json
+
+{
+    "name":"Natalino",
+    "password":"123"
+}
+
+###

@@ -1,0 +1,26 @@
+extends layout
+block content
+  script(type='text/javascript', src='/javascripts/edit_options.js')
+  html
+  head
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    
+  body
+     form(formaction='/', formmethod='post', enctype='multipart/form-data' id="insert")
+       h1 #{title}
+       input(type='file', name='filetoupload')
+       br
+       input(type='text', name='name_of_place')
+       br
+       input(type='submit' value = "Atualizar" formmethod='post') 
+       br
+       br
+       br
+     div
+      each user in users
+       .image-block
+        h3 #{user.name} com #{user.votes} votos
+        img.className#IdName(src="/"+user.img alt="Image Title")
+        a(href="/insert/")
+         button(type="button") Voltar
+       br

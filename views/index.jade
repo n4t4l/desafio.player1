@@ -1,0 +1,17 @@
+extends layout
+block content
+  script.
+   let optionsInfo = !{users2}; console.log(optionsInfo);
+  script(type='text/javascript', src="/javascripts/socket.io-client/dist/socket.io.min.js")
+  script(type='text/javascript', src='/javascripts/public_index.js')
+  h1= title
+  p Bem vindos a #{title}
+    div
+    each user in users
+       .image-block
+        div.usertext(id = 'user_txt'+user.id) #{user.name} com #{user.votes} votos
+        img.className#IdName(src=user.img alt= user.name)
+
+        button(type="button" onclick = "userVote("+user.id+")") Vote em #{user.name}
+    a(href="/login/")
+      button(type="button") Login

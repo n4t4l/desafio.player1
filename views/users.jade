@@ -1,0 +1,24 @@
+extends layout
+block content
+  script(type='text/javascript',src="https://unpkg.com/axios/dist/axios.min.js")
+  script(type='text/javascript', src='/javascripts/public_users.js')
+  html
+  head
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+  body
+     form(formaction='/', formmethod='post',id="insert")
+       h1 #{title}
+       |Login
+       br
+       input(type='text', name='login')
+       br
+       |Password
+       br
+       input(type='password' name='password')
+       br
+       input(type='button' formmethod='post' value='login' onclick="Login()")
+       br
+       input(type='button' formaction='/register/' value='Register' onclick='Register()')
+
+     

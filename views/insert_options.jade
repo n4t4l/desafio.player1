@@ -1,0 +1,34 @@
+extends layout
+block content
+  script.
+   loginName="#{users}";console.log(loginName);
+  script(type='text/javascript',src="https://unpkg.com/axios/dist/axios.min.js")
+  script(type='text/javascript', src='/javascripts/public_insert_options.js')
+  html
+  head
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+  body
+     form(formaction='/', formmethod='post', enctype='multipart/form-data' id="insert")
+       h1 #{title}
+       input(type='file', name='filetoupload')
+       br
+       input(type='text', name='name_of_place')
+       br
+       input(type='submit' formmethod='post')
+       br
+       br
+       br
+     div
+     each user in users
+       .image-block
+        h3 #{user.name} com #{user.votes} votos
+        img.className#IdName(src="/"+user.img alt="Image Title")
+
+
+        button(type="button" id = "deletebutton" value = user.id onclick = "DeleteEntry()") Delete id #{user.id}
+        a(href="/insert/edit/?id="+user.id)
+         button(type="button") Edit id #{user.id}
+        br
+      a(href="/")
+       button(type="button") Voltar a tela de votos
