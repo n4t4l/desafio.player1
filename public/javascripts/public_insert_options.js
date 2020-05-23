@@ -1,7 +1,4 @@
 
-	var something = function() {
-    res.redirect('/users');
-  }
 
 	var DeleteEntry = function()
 	{
