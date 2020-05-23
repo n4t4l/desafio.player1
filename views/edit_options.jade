@@ -1,6 +1,9 @@
 extends layout
 block content
-  script(type='text/javascript', src='/javascripts/edit_options.js')
+  script.
+   let optionsInfo = !{users2};
+  script(type='text/javascript',src="https://unpkg.com/axios/dist/axios.min.js")
+  script(type='text/javascript', src='/javascripts/public_edit_options.js')
   html
   head
     link(rel='stylesheet', href='/stylesheets/style.css')
@@ -10,7 +13,9 @@ block content
        h1 #{title}
        input(type='file', name='filetoupload')
        br
-       input(type='text', name='name_of_place')
+       input(type='text', name='name_of_place' value = users[0].name)
+       br
+       input(type='number', name='votes'  value = users[0].votes)
        br
        input(type='submit' value = "Atualizar" formmethod='post') 
        br
@@ -21,6 +26,5 @@ block content
        .image-block
         h3 #{user.name} com #{user.votes} votos
         img.className#IdName(src="/"+user.img alt="Image Title")
-        a(href="/insert/")
-         button(type="button") Voltar
-       br
+  a(href="/insert/")
+   button(type="button") Voltar

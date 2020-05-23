@@ -14,4 +14,15 @@
 			}
 		);
 	}
-// /a(href="/insert/?id="+user.id)
+
+	var logOut = function()
+	{
+			eraseCookie("Player1");
+			window.location = "/";
+	}
+
+//COOKIE FUNCTIONS 
+
+function eraseCookie(name) {   
+    document.cookie = name+'=; Max-Age=-99999999;'; 
+}

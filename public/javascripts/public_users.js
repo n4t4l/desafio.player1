@@ -1,4 +1,3 @@
-
 	var something = function() {
     res.redirect('/users');
   }
@@ -14,7 +13,7 @@
 
 	var Login = function()
 	{
-		config.url = "/users";
+		config.url = "/login/";
 		config.data = 
 		{
 			"almosso":Math.random(),
@@ -26,14 +25,19 @@
 		axios(config).then(
 			function(response)
 			{
-				console.log()
-				document.cookie = "player1_cookie="+response.data.acessToken;
-				console.log(response);
+				console.log(response.data);
+				document.cookie = 'Player1='+response.data.acessToken;
+				setCookie("Player1",response.data.acessToken,1);
+				document.cookie = 'pls=response.data.acessToken';
+				console.log("document cookie: "+document.cookie);
 				window.location = "/insert/";
 			}
 		);
 
 	}
+
+
+
 	var Register = function()
 	{
 		config.data = 
@@ -49,4 +53,26 @@
 			}
 		);
 	}
-// /a(href="/insert/?id="+user.id)
+// /COOKIE FUNCTIONS 
+
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+

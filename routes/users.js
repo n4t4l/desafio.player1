@@ -15,18 +15,20 @@ var knex = require('knex')({
   }
 });
 //LOGIN ROUTE
+
+
 router.post('/', async (req, res) => {
   
-  console.log(req.body);
+  //console.log(req.body);
   try
   {
     knex('admins').where("login","=",req.body.name).then( async (dados)=>
     {
-      console.log(dados[0])
+      //console.log(dados[0])
       
       if(await bcrypt.compare(req.body.password,dados[0].pw))
       {
-
+        console.log("acess granted");
         const acessToken = jwt.sign(dados[0].toString(),process.env.ACESS_TOKEN_SECRET);
         res.status(200).json({acessToken:acessToken});
       }
@@ -56,7 +58,7 @@ router.post('/', async (req, res) => {
     user = {name: req.body.name,password: hashedPassword};
     console.log("User: "+user.toString());
     //put the login and hashed pw in the database
-    knex('admins').insert({login:user.name,pw:user.password,can_edit:0})
+    knex('admins').insert({login:user.name,pw:user.password,can_edit:1})
     .then( function (result) {
       res.status(201).send("user inserted");     // respond back to request
     });
@@ -77,6 +79,7 @@ router.post('/', async (req, res) => {
  {
    console.log(req);
    const token = req.cookies["player1_cookie"];
+   
    if(token == null || token == "player1_cookie"){return res.sendStatus(401);}
    jwt.verify(token,process.env.ACESS_TOKEN_SECRET, (err,user) =>
    {
@@ -87,7 +90,7 @@ router.post('/', async (req, res) => {
  }
 
 
-router.get('/', authenticateToken,function(req, res, next) {
+router.get('/',function(req, res, next) {
   
   res.render('users');
 });
