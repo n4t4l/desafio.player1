@@ -5,7 +5,7 @@ var formidable = require('formidable');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 
-var knex = require('knex')({
+const knex = require('knex')({
   client: 'mysql',
   connection: {
     host : '127.0.0.1',
@@ -84,11 +84,11 @@ router.post('/', async (req, res) => {
    console.log(req);
    const token = req.cookies["Player1"];
    
-   if(token == null || token == "Player1"){return res.sendStatus(401);}
-   jwt.verify(token,process.env.ACESS_TOKEN_SECRET, (err,user) =>
+   if(token == null || token == ""){return res.render('login');}
+   jwt.verify(token,process.env.ACESS_TOKEN_SECRET, (err) =>
    {
-     if(err){return res.sendStatus(401);}
-     res.redirect('/insert/');
+      if(err){return res.render('login');}
+      res.redirect('/insert/');
    })
    next;
  

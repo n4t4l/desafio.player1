@@ -24,10 +24,10 @@ const knex = require('knex')({
 function authenticateToken(req,res,next)
 {
 	const token = req.cookies["Player1"];
-	if(token == null || token == ""){return res.sendStatus(401);}
+	if(token == null || token == ""){return res.render('login');}
 	jwt.verify(token,process.env.ACESS_TOKEN_SECRET, (err,user) =>
 	{
-		if(err){return res.sendStatus(401);}
+		if(err){return res.render('login');}
 		next();
 	})
 
@@ -36,7 +36,7 @@ function authenticateToken(req,res,next)
 router.get('/',authenticateToken, function(req, res, next) {
   knex('options').then((dados)=>
   {
-	  console.log("req query get "+req.query);
+	  //console.log("req query get "+req.query);
 	  //res.send(dados);
 	  res.render('insert_options',{title: 'Insira sua opção',users:dados,dir:__dirname});
 	  },next)
@@ -54,7 +54,7 @@ router.get('/edit',authenticateToken, function(req, res, next){
 	.then((dados)=>
 {
 	console.log("user dados.img"+dados[0].img);
-  console.log(req.query);
+  //console.log(req.query);
   res.render('edit_options',{title: 'Edite a opção '+dados[0].name,users:dados,users2:JSON.stringify(dados[0]),id:req.query.id});
   },next)
 

@@ -14,8 +14,6 @@
 		config.url = "/login/";
 		config.data = 
 		{
-			"almosso":Math.random(),
-			
 			"name":	document.getElementsByName("login")[0].value ,
 			"password":document.getElementsByName("password")[0].value
 		}
@@ -23,13 +21,13 @@
 		axios(config).then(
 			function(response)
 			{
-				console.log(response.data);
+				//console.log(response.data);
 				if(response.data.acessToken != undefined)
 				{
 					document.cookie = 'Player1='+response.data.acessToken;
-					setCookie("Player1",response.data.acessToken,1);
+					setCookie("Player1",response.data.acessToken,30);
 					document.cookie = 'pls=response.data.acessToken';
-					console.log("document cookie: "+document.cookie);
+					//console.log("document cookie: "+document.cookie);
 					window.location = "/insert/";
 				}
 				
@@ -51,7 +49,7 @@
 			function(response)
 			{
 			 	
-				console.log(response);
+				//console.log(response);
 			}
 		);
 	}

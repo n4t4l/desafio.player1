@@ -17,6 +17,15 @@ var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var insertRouter = require('./routes/insert_options');
 
+const knex = require('knex')({
+  client: 'mysql',
+  connection: {
+    host : '127.0.0.1',
+    user : 'root',
+    password : '',
+    database : 'player1'
+  }
+});
 
 //config express
 const app = express();
@@ -37,6 +46,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 var server = require('http').createServer(app);
 const io = require('socket.io')(server);
 //socket it bro
+
 
 //ROUTING
 app.use('/', indexRouter);
@@ -75,23 +85,14 @@ io.on('connection', function(client) {
 }) 
 //KNEX CONNECTION AND METHODS
 
-const knex = require('knex')({
-  client: 'mysql',
-  connection: {
-    host : '127.0.0.1',
-    user : 'root',
-    password : '',
-    database : 'player1'
-  }
-});
+
 
 var voteOption = function(idv)
 {
   //get the number of votes on the server
   knex('options').where('id',"=",idv).then((dados)=>
   {
-    console.log("achei o maluco")
-    console.log("a opção de id: "+idv+" tem "+dados[0].votes+" votos");
+    
     //count the vote :D
     knex('options')
     .where({ id: idv })
@@ -100,13 +101,13 @@ var voteOption = function(idv)
       {
         knex('options').then((dadosUpdated)=>
         {
-          console.log("a opção de id: "+idv+" tem "+dadosUpdated[0].votes+" votos");
+          //emit the updated list of votes to all connected users
           io.emit('voteData',dadosUpdated);
           
         });
       });
     
-    //get the updated list of options
+    
    
 
 

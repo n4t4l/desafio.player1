@@ -1,4 +1,5 @@
 
+  //this assumes that the socket.io server is always the same as the express one
   var page_ip = window.location.href.split("?")[0];
   var socket = io.connect(page_ip);
 
@@ -23,10 +24,10 @@
 }
 
 
-
+//everytime the count is updated, we get this message so they all update together
 socket.on('voteData', function(data) {
   optionsInfo = data;
-  console.log("recebi do serv");
+  //run trough all options and update the HTML elements to match the number of votes
   for(var i = 0; i < optionsInfo.length; i++)
   {
     
@@ -37,20 +38,7 @@ socket.on('voteData', function(data) {
   
 });
 
+//function to emit the vote to the server
  var userVote = function(idVote)
- {
-   
-    //find the object with this id so we can get it's name and vote count locally
-    var resultID = findWithAttr(optionsInfo,"id",idVote);
-    //console.log(optionsInfo[resultID]);
-    //emit the vote
-    socket.emit('vote',idVote);
-    //this calls the function to update the vote on the server
-    //but we also update the vote locally so in case of high latency 
-    //the user doesnt see it (at least in his own vote)
-    //optionsInfo[resultID].votes = optionsInfo[resultID].votes +1;
-    //document.getElementById("user_txt"+idVote).innerHTML = optionsInfo[resultID].name+" com "+
-    //optionsInfo[resultID].votes+" votos";
-    //and now we wait for the server to transmit the options list back to us so we can update it 
- }
+ {socket.emit('vote',idVote);}
 
