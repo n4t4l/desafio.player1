@@ -14,9 +14,9 @@ const knex = require('knex')({
     database : 'player1'
   }
 });
+
+
 //LOGIN ROUTE
-
-
 router.post('/', async (req, res) => {
   
   //console.log(req.body);
@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
   var user = {}
   try
   {
-    console.log("req body: "+req.toString());
+    //console.log("req body: "+req.toString());
     //encrypting password
     const hashedPassword = await bcrypt.hash(req.body.password,10);
     //creating data struct to send to database
@@ -64,7 +64,7 @@ router.post('/', async (req, res) => {
     //put the login and hashed pw in the database
     knex('admins').insert({login:user.name,pw:user.password,can_edit:1})
     .then( function (result) {
-      res.status(201).send("user inserted");     // respond back to request
+      res.render("login");     // respond back to request
     });
     
   }
@@ -79,25 +79,21 @@ router.post('/', async (req, res) => {
  });
 
  //if we get the authtoken auto redirect to the admin page
- function authenticateToken_autologin(req,res,next)
+ function authenticateToken(req,res,next)
  {
-   console.log(req);
    const token = req.cookies["Player1"];
-   
-   if(token == null || token == ""){return res.render('login');}
-   jwt.verify(token,process.env.ACESS_TOKEN_SECRET, (err) =>
+   if(token == null || token == ""){console.log("travei no login1");return res.render('login');}
+   jwt.verify(token,process.env.ACESS_TOKEN_SECRET, (err,user) =>
    {
-      if(err){return res.render('login');}
-      res.redirect('/insert/');
+     if(err){return res.render('login');}
+     next();
    })
-   next;
- 
+   
  }
 
-
-router.get('/',authenticateToken_autologin,function(req, res, next) {
-  
-  res.render('login');
+router.get('/',authenticateToken,function(req, res, next) {
+  console.log("passei direto pelo autenticate");
+  res.redirect("/insert/");
 });
 
 module.exports = router;

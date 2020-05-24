@@ -6,8 +6,11 @@
 		axios.delete("/insert/?id="+event.target.value).then(
 			function(response)
 			{
-			 	window.location.reload(true);
-				console.log("TRU");
+				axios.post('/refresh/')
+				.then(response => {
+				window.location.reload(true);
+				console.log(response);
+				})
 			}
 		);
 	}
@@ -17,6 +20,22 @@
 			eraseCookie("Player1");
 			eraseCookieFromAllPaths("Player1");
 			window.location = "/";
+	}
+
+	var refreshUsers = function()
+	{
+		var bodyFormData = new FormData(document.forms[0]);
+		axios.post('/insert/',bodyFormData)
+		.then(response => {
+			axios.post('/refresh/')
+			.then(response => {
+			window.location.reload(true);
+	  		console.log(response);
+			})
+		})
+		.catch(error => {
+	  	console.log(error);
+		});
 	}
 
 //COOKIE FUNCTIONS 

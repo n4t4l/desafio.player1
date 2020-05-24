@@ -21,12 +21,12 @@
 		axios(config).then(
 			function(response)
 			{
-				//console.log(response.data);
+				console.log(response.data.acessToken);
 				if(response.data.acessToken != undefined)
 				{
 					document.cookie = 'Player1='+response.data.acessToken;
 					setCookie("Player1",response.data.acessToken,30);
-					document.cookie = 'pls=response.data.acessToken';
+					//document.cookie = 'pls=response.data.acessToken';
 					//console.log("document cookie: "+document.cookie);
 					window.location = "/insert/";
 				}

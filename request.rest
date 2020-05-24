@@ -17,3 +17,7 @@ Content-Type: application/json
 }
 
 ###
+
+post http://localhost:8080/refresh/
+
+###

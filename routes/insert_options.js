@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 router.use(cookieParser());
 var fs = require('fs');
 var formidable = require('formidable');
+var ip = require("ip");
 
 router.use(bodyParser.json()); router.use(bodyParser.urlencoded({ extended: true }));
 const knex = require('knex')({
@@ -27,10 +28,10 @@ function authenticateToken(req,res,next)
 	if(token == null || token == ""){return res.render('login');}
 	jwt.verify(token,process.env.ACESS_TOKEN_SECRET, (err,user) =>
 	{
-		if(err){return res.render('login');}
+		if(err){console.log("travei no insert2");return res.render('login');}
 		next();
 	})
-
+	
 }
 /* GET options listing. */
 router.get('/',authenticateToken, function(req, res, next) {
@@ -117,7 +118,7 @@ router.post('/',authenticateToken, function(req, res, next){
 			.then( function (result) 
 			{
 			  console.log(result);
-			  res.redirect('/insert');     // respond back to request
+			  res.send("ok");     // respond back to request
 		   });
 
       });
@@ -128,17 +129,19 @@ router.post('/',authenticateToken, function(req, res, next){
 
 });
 
+
+
 //DELETE for deleting options
 router.delete('/',authenticateToken, function(req, res, next){
  
 	knex('options')
 	.where('id',"=",req.query.id)
 	.del().then( function (result) {
-		  //res.redirect('/insert');
-	res.send("deleted by koringaum");
+		res.send("deleted by koringaum");
 	   });
 
 })
+
 
 
 module.exports = router;

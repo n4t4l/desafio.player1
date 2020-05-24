@@ -6,7 +6,7 @@ block content
   script(type='text/javascript', src='/javascripts/public_index.js')
   h1= title
   p Bem vindos a #{title}
-    div_votes
+  div_votes#div_votes
     each user in users
        .image-block
         div.usertext(id = 'user_txt'+user.id) #{user.name} com #{user.votes} votos

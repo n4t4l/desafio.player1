@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+require('dotenv').config();
+const io = require('socket.io');
 
 const knex = require('knex')({
   client: 'mysql',
@@ -16,7 +18,7 @@ router.get('/', function(req, res, next) {
   
     
     knex('options').then((dados)=>
-  {
+   {
    
     res.render('index',{title: 'Aplicação de votos Alex Natalino',users:dados,
     users2:JSON.stringify(dados)});
@@ -25,5 +27,7 @@ router.get('/', function(req, res, next) {
   
   
 });
+
+
 
 module.exports = router;

@@ -22,7 +22,15 @@ var EditOption = function()
     {
       if(response.status == 200)
       {
+        axios.post('/refresh/')
+        .then(response => {
+        console.log(response);
+        })
+        .catch(error => {
+        console.log(error);
+        });
         window.location = "/insert/edit/?id="+optionsInfo.id;//if ok, refresh
+        
       }
     }
   );

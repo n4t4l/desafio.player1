@@ -10,7 +10,7 @@ const errs = require('restify-errors');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+let door = 8080;
 
 //route linking
 var indexRouter = require('./routes/index');
@@ -52,7 +52,17 @@ const io = require('socket.io')(server);
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/insert', insertRouter);
+app.use('/refresh/', function(req, res, next) {
+	knex('options').then((dados)=>
+	  {updateOptions(dados);},next);
+	   res.send("ok");
+  
+  });
 
+var updateOptions = function(dados)
+{
+  io.emit('updateOptions',dados);
+}
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -74,7 +84,7 @@ io.on('connection', function(client) {
   console.log('Client connected...');
 
   client.on('join', function(data) {
-      console.log(data);
+      //console.log(data);
   });
 
   client.on('vote', function(data) {
@@ -82,6 +92,7 @@ io.on('connection', function(client) {
     
     
   });
+
 }) 
 //KNEX CONNECTION AND METHODS
 
@@ -114,6 +125,8 @@ var voteOption = function(idv)
   });
   
 }
+
+//route for updating options on all users
 
 
 
