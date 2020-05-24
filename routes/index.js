@@ -1,8 +1,9 @@
 require('dotenv').config();
+//modules
 var express = require('express');
 var router = express.Router();
 const io = require('socket.io');
-
+//knex config
 const knex = require('knex')({
   client: process.env.DB_CLIENT,
   connection: {

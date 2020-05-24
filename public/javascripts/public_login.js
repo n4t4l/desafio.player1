@@ -42,6 +42,7 @@
 	{
 		config.data = 
 		{
+			method:'put',
 			"name":	document.getElementsByName("login")[0].value ,
 			"password":document.getElementsByName("password")[0].value
 		}

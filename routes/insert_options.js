@@ -1,27 +1,22 @@
 require('dotenv').config();
 var express = require('express');
-var axios = require('axios');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-router.use(cookieParser());
 var fs = require('fs');
 var formidable = require('formidable');
-var ip = require("ip");
+router.use(bodyParser.urlencoded({ extended: true }));router.use(cookieParser());
 
-
-router.use(bodyParser.json()); router.use(bodyParser.urlencoded({ extended: true }));
 const knex = require('knex')({
-  client: 'mysql',
-  connection: {
-    host : '127.0.0.1',
-    user : 'root',
-    password : '',
-    database : 'player1'
-  }
-});
-
+	client: process.env.DB_CLIENT,
+	connection: {
+	  host : process.env.DB_HOST,
+	  user : process.env.DB_USER,
+	  password : process.env.DB_PASSWORD,
+	  database : process.env.DB_DATABASE
+	}
+  });
 //AUTH COOKIE 
 
 function authenticateToken(req,res,next)
@@ -120,7 +115,7 @@ router.post('/',authenticateToken, function(req, res, next){
 			.then( function (result) 
 			{
 			  console.log(result);
-			  res.send("ok");     // respond back to request
+			  res.sendStatus(201).send("ok");     // respond back to request
 		   });
 
       });
@@ -139,7 +134,7 @@ router.delete('/',authenticateToken, function(req, res, next){
 	knex('options')
 	.where('id',"=",req.query.id)
 	.del().then( function (result) {
-		res.send("deleted by koringaum");
+		res.sendStatus(200).send("deleted by koringaum");
 	   });
 
 })

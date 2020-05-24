@@ -6,11 +6,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const errs = require('restify-errors');
 const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-let door = 8080;
+var jwt = require('jsonwebtoken');
 
 //route linking
 var indexRouter = require('./routes/index');
@@ -52,13 +49,26 @@ const io = require('socket.io')(server);
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/insert', insertRouter);
-app.use('/refresh/', function(req, res, next) {
+app.use('/refresh/',authenticateToken, function(req, res, next) {
 	knex('options').then((dados)=>
-	  {updateOptions(dados);},next);
-	   res.send("ok");
-  
-  });
+	  {
+      updateOptions(dados);},next);
+      res.status(200).send("ok");
+});
 
+function authenticateToken(req,res,next)
+{
+	const token = req.cookies["Player1"];
+	if(token == null || token == ""){return res.render('login');}
+	jwt.verify(token,process.env.ACESS_TOKEN_SECRET, (err,user) =>
+	{
+		if(err){console.log("travei no insert2");return res.render('login');}
+		next();
+	})
+	
+}
+
+//emit the call to clients to update their front-end with data from database
 var updateOptions = function(dados)
 {
   io.emit('updateOptions',dados);
@@ -86,21 +96,17 @@ io.on('connection', function(client) {
   client.on('join', function(data) {
       //console.log(data);
   });
-
+  //here we receive a socket.io call from client with an option ID
   client.on('vote', function(data) {
     voteOption(data);
-    
-    
   });
 
 }) 
-//KNEX CONNECTION AND METHODS
 
-
-
+//add + 1 vote to the given id
 var voteOption = function(idv)
 {
-  //get the number of votes on the server
+  
   knex('options').where('id',"=",idv).then((dados)=>
   {
     
@@ -117,17 +123,8 @@ var voteOption = function(idv)
           
         });
       });
-    
-    
-   
-
-
   });
   
 }
-
-//route for updating options on all users
-
-
 
 server.listen(8080);

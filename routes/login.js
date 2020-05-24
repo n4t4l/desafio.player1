@@ -1,8 +1,6 @@
 require('dotenv').config();
 var express = require('express');
 var bcrypt = require('bcrypt');
-var bodyParser = require('body-parser');
-var formidable = require('formidable');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 
@@ -52,7 +50,7 @@ router.post('/', async (req, res) => {
 
  //REGISTER ROUTE
  //TO-DO: check if username is avaliable
- router.post('/register/', async (req, res) => {
+ router.put('/', async (req, res) => {
   var user = {}
   try
   {
@@ -65,7 +63,7 @@ router.post('/', async (req, res) => {
     //put the login and hashed pw in the database
     knex('admins').insert({login:user.name,pw:user.password,can_edit:1})
     .then( function (result) {
-      res.render("login");     // respond back to request
+      res.status(201).render("login");     // respond back to request
     });
     
   }
