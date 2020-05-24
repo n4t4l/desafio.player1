@@ -34,5 +34,5 @@ Esta aplicação é uma aplicação de votos para web, cuja permite além de vot
 - Modifique o arquivo .env para apontar para seu banco de dados
 - No seu terminal, vá até a pasta do projeto e execute o comando
 `node server.js`
--Pronto! Agora é só acessar a pagina "http//localhost:8080" ou então começar a fazer chamadas a API
+- Pronto! Agora é só acessar a pagina "http//localhost:8080" ou então começar a fazer chamadas a API
 > A aplicação vem com um login de administrador incluso{login:321,senha:321}
