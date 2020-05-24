@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var axios = require('axios');
 var router = express.Router();
@@ -8,6 +9,7 @@ router.use(cookieParser());
 var fs = require('fs');
 var formidable = require('formidable');
 var ip = require("ip");
+
 
 router.use(bodyParser.json()); router.use(bodyParser.urlencoded({ extended: true }));
 const knex = require('knex')({

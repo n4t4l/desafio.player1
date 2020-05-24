@@ -48,7 +48,7 @@
 		axios(config).then(
 			function(response)
 			{
-			 	
+				window.location = "/login/";
 				//console.log(response);
 			}
 		);

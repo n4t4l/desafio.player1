@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var bcrypt = require('bcrypt');
 var bodyParser = require('body-parser');
@@ -6,12 +7,12 @@ var router = express.Router();
 var jwt = require('jsonwebtoken');
 
 const knex = require('knex')({
-  client: 'mysql',
+  client: process.env.DB_CLIENT,
   connection: {
-    host : '127.0.0.1',
-    user : 'root',
-    password : '',
-    database : 'player1'
+    host : process.env.DB_HOST,
+    user : process.env.DB_USER,
+    password : process.env.DB_PASSWORD,
+    database : process.env.DB_DATABASE
   }
 });
 
